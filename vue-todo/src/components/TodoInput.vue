@@ -5,29 +5,47 @@
     <button class="addContainer" @click="addTodo">
         <i class="fas fa-plus addBtn"></i>
     </button>
+
+    <CModal v-if="showModal" @close="showModal = false">
+        <h3 slot="header">
+            경고!
+            <button class="closeModalBtn" @click="showModal = false">
+                <i class="fa fa-times" aria-hidden="true"></i>
+            </button>
+        </h3>
+        <template #body>
+            아무것도 입력하지 않으셨습니다.
+        </template>
+    </CModal>
   </div>
 </template>
 
 <script>
+import CModal from './common/CModal.vue';
+
 export default {
-    data: function(){
+    data(){
         return {
             newTodoItem: "",
+            showModal: false,
         }
     },
     methods: {
-        addTodo: function(){
+        addTodo(){
             // console.log(this.newTodoItem);
             if(this.newTodoItem !== '')  {
-                let obj = {completed: false, item: this.newTodoItem};
-                localStorage.setItem(this.newTodoItem, JSON.stringify(obj));
+                // this.$emit('이벤트 이름', 인자1, 인자2 ...);
+                this.$emit('addTodoItem', this.newTodoItem);
                 this.clearInput();
+            } else {
+                this.showModal = !this.showModal;
             }
         },
-        clearInput: function(){
+        clearInput(){
             this.newTodoItem = "";
         },
-    }
+    },
+    components: { CModal },
 }
 </script>
 
@@ -58,5 +76,10 @@ input:focus {
 .addBtn {
     color: #fff;
     vertical-align: middle;
+}
+
+.closeModalBtn {
+    font-size: inherit;
+    color: #42b983;
 }
 </style>
